@@ -34,13 +34,15 @@ function checkIdProject(req, res, next) {
   return next();
 }
 
-server.get("/projects", countRequests, (req, res) => {
+server.use(countRequests);
+
+server.get("/projects", (req, res) => {
   return projects.length > 0
     ? res.json(projects)
     : res.json({ message: "Nenhum projeto encontrado." });
 });
 
-server.post("/projects", countRequests, (req, res) => {
+server.post("/projects", (req, res) => {
   const { id, title, tasks } = req.body;
   projeto = {
     id,
@@ -52,23 +54,18 @@ server.post("/projects", countRequests, (req, res) => {
   return res.json(projects);
 });
 
-server.post(
-  "/projects/:id/tasks",
-  countRequests,
-  checkIdProject,
-  (req, res) => {
-    const { title } = req.body;
-    tasks = req.projeto.tasks;
+server.post("/projects/:id/tasks", checkIdProject, (req, res) => {
+  const { title } = req.body;
+  tasks = req.projeto.tasks;
 
-    tasks.push(title);
+  tasks.push(title);
 
-    projects[req.index].tasks = tasks;
+  projects[req.index].tasks = tasks;
 
-    return res.json(projects);
-  }
-);
+  return res.json(projects);
+});
 
-server.put("/projects/:id", countRequests, checkIdProject, (req, res) => {
+server.put("/projects/:id", checkIdProject, (req, res) => {
   const { title } = req.body;
 
   index = req.index;
@@ -81,7 +78,7 @@ server.put("/projects/:id", countRequests, checkIdProject, (req, res) => {
   return res.json(projects);
 });
 
-server.delete("/projects/:id", countRequests, checkIdProject, (req, res) => {
+server.delete("/projects/:id", checkIdProject, (req, res) => {
   projects.splice(req.index, 1);
   return res.json({ message: "Projeto excluído com sucesso." });
 });

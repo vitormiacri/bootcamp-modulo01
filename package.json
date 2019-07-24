@@ -8,7 +8,8 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "lodash": "^4.17.13"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
